@@ -3,6 +3,8 @@ import bs4
 from bs4 import BeautifulSoup
 import requests
 import openpyxl
+from tkinter import *
+from tkinter import ttk
 
 
 def cargar_todas_paginas():
@@ -129,9 +131,10 @@ def insertar_datos():
     ql_insertar_datos = "INSERT INTO luchadores (nombre,apodo,peso,ratio,cara) VALUES (%s, %s, %s, %s, %s)"
     for luchador in datos_luchadores:
         values = [luchador["nombre"], luchador["apodo"], luchador["peso"], luchador["ratio"], luchador["cara"]]
-        cursor.execute(ql_insertar_datos,values)
+        cursor.execute(ql_insertar_datos, values)
     print("Se han metido todos los datos")
     cursor.close()
+
 
 def eliminar_datos():
     conexion = conectar_bbdd()
@@ -140,6 +143,7 @@ def eliminar_datos():
     cursor.execute(eliminar)
     print("Se han eliminado todos los datos")
     cursor.close()
+
 
 def consultar_datos():
     lista_datos_luchadores = list()
@@ -158,10 +162,35 @@ def consultar_datos():
     return lista_datos_luchadores
 
 
+def ventana_mostrar():
+    ventana2 = Tk()
+    menu_ventana = Menu(ventana2)
+    ventana2.title("Ventana para mostrar los datos")
+    ventana2.config(menu=menu_ventana)
+    ventana2.geometry("800x400")
 
 
+def aplicacion_luchadores():
+    root = Tk()
+    menu_principal = Menu(root)
+    root.title("Luchadores UFC")
+    root.config(menu=menu_principal)
+    root.geometry("800x0")
+
+    barra_menu = Menu(menu_principal, tearoff=0)
+    barra_menu1 = Menu(menu_principal, tearoff=0)
+    barra_menu2 = Menu(menu_principal, tearoff=0)
+
+    menu_principal.add_cascade(label="Cargar", menu=barra_menu)
+    barra_menu.add_command(label="Luchadores", command=lambda: insertar_datos())
+
+    menu_principal.add_cascade(label="Eliminar", menu=barra_menu1)
+    barra_menu1.add_command(label="Luchadores", command=lambda: eliminar_datos())
+
+    menu_principal.add_cascade(label="Mostrar", menu=barra_menu2)
+    barra_menu2.add_command(label="Luchadores", command=lambda: ventana_mostrar())
+
+    root.mainloop()
 
 
-
-
-
+aplicacion_luchadores()
