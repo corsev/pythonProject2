@@ -168,7 +168,30 @@ def ventana_mostrar():
     ventana2.title("Ventana para mostrar los datos")
     ventana2.config(menu=menu_ventana)
     ventana2.geometry("800x400")
+    ventana2.resizable(True, True)
     luchadores = consultar_datos()
+    columna = ("id", "nombre", "apodo", "peso", "ratio", "cara")
+
+    tv = ttk.Treeview(columna)
+
+    tv.column("id", ancho=100, ancla=CENTER)
+    tv.column("nombre", ancho=100, ancla=CENTER)
+    tv.column("apodo", ancho=100, ancla=CENTER)
+    tv.column("peso", ancho=100, ancla=CENTER)
+    tv.column("ratio", ancho=100, ancla=CENTER)
+    tv.column("cara", ancho=100, ancla=CENTER)
+
+    tv.heading("id", text="Id")
+    tv.heading("nombre", text="Nombre")
+    tv.heading("apodo", text="Apodo")
+    tv.heading("peso", text="Peso")
+    tv.heading("ratio", text="Ratio")
+    tv.heading("cara", text="Cara")
+
+    tv.pack(side=LEFT, fill=BOTH)
+
+    ventana2.mainloop()
+
 
 
 
