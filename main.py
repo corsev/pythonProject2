@@ -84,32 +84,9 @@ def cargar_datos():
             # Guardamos el diccionario en una lista para guardar a todos los luchadores
             lista_datos_luchadores.append(luchadores_datos)
 
-        # Creamos un excel con todos los datos de los jugadores
 
-        wb = openpyxl.Workbook()
-        ruta = 'Luchadores UFC.xlsx'
-        hoja = wb.active
-        hoja.title = "Datos Luchadores"
-        hoja.append(('Nombre', 'Apodo', 'Peso', 'Ratio', 'Cara'))
 
-        fila = 2
 
-        col_cara = 5
-        col_nombre = 1
-        col_apodo = 2
-        col_peso = 3
-        col_ratio = 4
-
-        for caras, nombres, apodos, pesos, ratios in zip(lista_cara, lista_nombre, lista_apodo, lista_peso,
-                                                         lista_ratio):
-            hoja.cell(column=col_cara, row=fila, value=caras)
-            hoja.cell(column=col_nombre, row=fila, value=nombres)
-            hoja.cell(column=col_apodo, row=fila, value=apodos)
-            hoja.cell(column=col_peso, row=fila, value=pesos)
-            hoja.cell(column=col_ratio, row=fila, value=ratios)
-            fila += 1
-
-            # wb.save(filename=ruta)
 
     return lista_datos_luchadores
 
@@ -170,26 +147,27 @@ def ventana_mostrar():
     ventana2.geometry("800x400")
     ventana2.resizable(True, True)
     luchadores = consultar_datos()
-    columna = ("id", "nombre", "apodo", "peso", "ratio", "cara")
+    tv = ttk.Treeview(ventana2)
 
-    tv = ttk.Treeview(columna)
+    tv['columns'] = ("id", "nombre", "apodo", "peso", "ratio", "cara")
 
-    tv.column("id", ancho=100, ancla=CENTER)
-    tv.column("nombre", ancho=100, ancla=CENTER)
-    tv.column("apodo", ancho=100, ancla=CENTER)
-    tv.column("peso", ancho=100, ancla=CENTER)
-    tv.column("ratio", ancho=100, ancla=CENTER)
-    tv.column("cara", ancho=100, ancla=CENTER)
+    tv.column("#0", width=0, anchor=CENTER)
+    tv.column("id", width=40, anchor=CENTER)
+    tv.column("nombre", width=100, anchor=CENTER)
+    tv.column("apodo", width=100, anchor=CENTER)
+    tv.column("peso", width=100, anchor=CENTER)
+    tv.column("ratio", width=100, anchor=CENTER)
+    tv.column("cara", width=100, anchor=CENTER)
 
-    tv.heading("id", text="Id")
-    tv.heading("nombre", text="Nombre")
-    tv.heading("apodo", text="Apodo")
-    tv.heading("peso", text="Peso")
-    tv.heading("ratio", text="Ratio")
-    tv.heading("cara", text="Cara")
+    tv.heading("#0", text="", anchor=CENTER)
+    tv.heading("id", text="Id", anchor=CENTER)
+    tv.heading("nombre", text="Nombre", anchor=CENTER)
+    tv.heading("apodo", text="Apodo", anchor=CENTER)
+    tv.heading("peso", text="Peso", anchor=CENTER)
+    tv.heading("ratio", text="Ratio", anchor=CENTER)
+    tv.heading("cara", text="Cara", anchor=CENTER)
 
-    tv.pack(side=LEFT, fill=BOTH)
-
+    tv.pack()
     ventana2.mainloop()
 
 
@@ -218,6 +196,7 @@ def aplicacion_luchadores():
     barra_menu2.add_command(label="Luchadores", command=lambda: ventana_mostrar())
 
     root.mainloop()
+
 
 
 aplicacion_luchadores()
