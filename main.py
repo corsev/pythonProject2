@@ -168,6 +168,9 @@ def ventana_mostrar():
     ventana2.title("Ventana para mostrar los datos")
     ventana2.config(menu=menu_ventana)
     ventana2.geometry("800x400")
+    luchadores = consultar_datos()
+
+
 
 
 def aplicacion_luchadores():
@@ -176,6 +179,7 @@ def aplicacion_luchadores():
     root.title("Luchadores UFC")
     root.config(menu=menu_principal)
     root.geometry("800x0")
+    root.resizable(True, True)
 
     barra_menu = Menu(menu_principal, tearoff=0)
     barra_menu1 = Menu(menu_principal, tearoff=0)
