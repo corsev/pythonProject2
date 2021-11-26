@@ -1,3 +1,5 @@
+import tkinter
+
 import mysql.connector as conector
 import bs4
 from bs4 import BeautifulSoup
@@ -167,7 +169,7 @@ def ventana_mostrar():
     menu_ventana = Menu(ventana2)
     ventana2.title("Ventana para mostrar los datos")
     ventana2.config(menu=menu_ventana)
-    ventana2.geometry("800x400")
+    ventana2.geometry("1400x200")
     ventana2.resizable(True, True)
     luchadores = consultar_datos()
     tv = ttk.Treeview(ventana2)
@@ -175,12 +177,12 @@ def ventana_mostrar():
     tv['columns'] = ("id", "nombre", "apodo", "peso", "ratio", "cara")
 
     tv.column("#0", width=0, anchor=CENTER)
-    tv.column("id", width=40, anchor=CENTER)
-    tv.column("nombre", width=100, anchor=CENTER)
-    tv.column("apodo", width=100, anchor=CENTER)
-    tv.column("peso", width=100, anchor=CENTER)
-    tv.column("ratio", width=100, anchor=CENTER)
-    tv.column("cara", width=100, anchor=CENTER)
+    tv.column("id", width=50, anchor=CENTER)
+    tv.column("nombre", width=150, anchor=CENTER)
+    tv.column("apodo", width=150, anchor=CENTER)
+    tv.column("peso", width=150, anchor=CENTER)
+    tv.column("ratio", width=150, anchor=CENTER)
+    tv.column("cara", width=800, anchor=CENTER)
 
     tv.heading("#0", text="", anchor=CENTER)
     tv.heading("id", text="Id", anchor=CENTER)
@@ -190,8 +192,27 @@ def ventana_mostrar():
     tv.heading("ratio", text="Ratio", anchor=CENTER)
     tv.heading("cara", text="Cara", anchor=CENTER)
 
+    siguiente = 1
+
+    for luchadore in luchadores:
+        tv.insert(parent="", index=siguiente, values=(luchadore["id"], luchadore["nombre"], luchadore["apodo"],
+                                                      luchadore["peso"], luchadore["ratio"], luchadore["cara"]))
+        siguiente += 1
+
+    barra1 = Scrollbar(ventana2, command=tv.yview)
+    barra1.pack(side=RIGHT, fill=Y)
+    tv.config(yscrollcommand=barra1.set)
+
+
     tv.pack()
     ventana2.mainloop()
+
+def insertar_luchador():
+    ventana3 = Tk()
+
+
+
+
 
 
 
@@ -208,6 +229,7 @@ def aplicacion_luchadores():
     barra_menu = Menu(menu_principal, tearoff=0)
     barra_menu1 = Menu(menu_principal, tearoff=0)
     barra_menu2 = Menu(menu_principal, tearoff=0)
+    barra_menu3 = Menu(menu_principal, tearoff=0)
 
     menu_principal.add_cascade(label="Cargar", menu=barra_menu)
     barra_menu.add_command(label="Luchadores", command=lambda: insertar_datos())
@@ -218,7 +240,13 @@ def aplicacion_luchadores():
     menu_principal.add_cascade(label="Mostrar", menu=barra_menu2)
     barra_menu2.add_command(label="Luchadores", command=lambda: ventana_mostrar())
 
+    menu_principal.add_cascade(label="Introducir", menu=barra_menu3)
+    barra_menu3.add_command(label="Luchadores", command=lambda: insertar_luchador())
+
     root.mainloop()
+
+
+
 
 
 aplicacion_luchadores()
