@@ -170,26 +170,27 @@ def ventana_mostrar():
     ventana2.geometry("800x400")
     ventana2.resizable(True, True)
     luchadores = consultar_datos()
-    columna = ("id", "nombre", "apodo", "peso", "ratio", "cara")
+    tv = ttk.Treeview(ventana2)
 
-    tv = ttk.Treeview(columna)
+    tv['columns'] = ("id", "nombre", "apodo", "peso", "ratio", "cara")
 
-    tv.column("id", ancho=100, ancla=CENTER)
-    tv.column("nombre", ancho=100, ancla=CENTER)
-    tv.column("apodo", ancho=100, ancla=CENTER)
-    tv.column("peso", ancho=100, ancla=CENTER)
-    tv.column("ratio", ancho=100, ancla=CENTER)
-    tv.column("cara", ancho=100, ancla=CENTER)
+    tv.column("#0", width=0, anchor=CENTER)
+    tv.column("id", width=40, anchor=CENTER)
+    tv.column("nombre", width=100, anchor=CENTER)
+    tv.column("apodo", width=100, anchor=CENTER)
+    tv.column("peso", width=100, anchor=CENTER)
+    tv.column("ratio", width=100, anchor=CENTER)
+    tv.column("cara", width=100, anchor=CENTER)
 
-    tv.heading("id", text="Id")
-    tv.heading("nombre", text="Nombre")
-    tv.heading("apodo", text="Apodo")
-    tv.heading("peso", text="Peso")
-    tv.heading("ratio", text="Ratio")
-    tv.heading("cara", text="Cara")
+    tv.heading("#0", text="", anchor=CENTER)
+    tv.heading("id", text="Id", anchor=CENTER)
+    tv.heading("nombre", text="Nombre", anchor=CENTER)
+    tv.heading("apodo", text="Apodo", anchor=CENTER)
+    tv.heading("peso", text="Peso", anchor=CENTER)
+    tv.heading("ratio", text="Ratio", anchor=CENTER)
+    tv.heading("cara", text="Cara", anchor=CENTER)
 
-    tv.pack(side=LEFT, fill=BOTH)
-
+    tv.pack()
     ventana2.mainloop()
 
 
