@@ -1,5 +1,3 @@
-import tkinter
-
 import mysql.connector as conector
 import bs4
 from bs4 import BeautifulSoup
@@ -203,19 +201,51 @@ def ventana_mostrar():
     barra1.pack(side=RIGHT, fill=Y)
     tv.config(yscrollcommand=barra1.set)
 
-
     tv.pack()
     ventana2.mainloop()
 
+
 def insertar_luchador():
     ventana3 = Tk()
+    ventana3.geometry("500x500")
+    ventana3.title("Guardar Luchador")
+    inserta = Label(ventana3, text="Guarda Aquí Luchadores", bg="grey", fg="black", width="500", height="3")
 
+    nombre_texto = Label(ventana3, text="Nombre")
+    apodo_texto = Label(ventana3, text="Apodo")
+    peso_texto = Label(ventana3, text="Peso")
+    ratio_texto = Label(ventana3, text="Ratio")
+    cara_texto = Label(ventana3, text="Cara")
 
+    nombre_texto.place(x=15, y=70)
+    apodo_texto.place(x=15, y=140)
+    peso_texto.place(x=15, y=210)
+    ratio_texto.place(x=15, y=280)
+    cara_texto.place(x=15, y=350)
 
+    nombre = StringVar()
+    apodo = StringVar()
+    peso = StringVar()
+    ratio = StringVar()
+    cara = StringVar()
 
+    nombre_entrada = Entry(ventana3, textvariable=nombre, width="30")
+    apodo_entrada = Entry(ventana3, textvariable=apodo, width="30")
+    peso_entrada = Entry(ventana3, textvariable=peso, width="30")
+    ratio_entrada = Entry(ventana3, textvariable=ratio, width="30")
+    cara_entrada = Entry(ventana3, textvariable=cara, width="30")
 
+    nombre_entrada.place(x=15, y=100)
+    apodo_entrada.place(x=15, y=170)
+    peso_entrada.place(x=15, y=240)
+    ratio_entrada.place(x=15, y=310)
+    cara_entrada.place(x=15, y=380)
 
+    guardar = Button(ventana3, text="Guardar", width=30, height=2, bg="grey")
+    guardar.place(x=15, y=430)
 
+    inserta.pack()
+    ventana3.mainloop()
 
 
 def aplicacion_luchadores():
@@ -244,9 +274,6 @@ def aplicacion_luchadores():
     barra_menu3.add_command(label="Luchadores", command=lambda: insertar_luchador())
 
     root.mainloop()
-
-
-
 
 
 aplicacion_luchadores()
