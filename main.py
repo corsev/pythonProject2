@@ -241,11 +241,22 @@ def insertar_luchador():
     ratio_entrada.place(x=15, y=310)
     cara_entrada.place(x=15, y=380)
 
-    guardar = Button(ventana3, text="Guardar", width=30, height=2, bg="grey")
+    guardar = Button(ventana3, text="Guardar", width=30, height=2, bg="grey",
+                     command=lambda: insertar_luchador_tkinter([nombre_entrada.get(),
+                                                                apodo_entrada.get(),
+                                                                peso_entrada.get(),
+                                                                ratio_entrada.get(),
+                                                                cara_entrada.get()]))
     guardar.place(x=15, y=430)
 
     inserta.pack()
     ventana3.mainloop()
+
+    return
+
+
+def insertar_luchador_tkinter(nombre_entrada, apodo_entrada, peso_entrada, ratio_entrada, cara_entrada):
+    return
 
 
 def aplicacion_luchadores():
