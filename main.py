@@ -10,7 +10,7 @@ from tkinter import ttk
 def cargar_todas_paginas():
     soups = []
     num_pag = 0
-    for a in range(71):
+    for a in range(61):
         url_todas = "https://www.ufcespanol.com/athletes/all?filters%5B0%5D=status%3A23&gender=All&search=&page=" + str(
             num_pag) + '"'
         pagina = requests.get(url_todas)
@@ -242,11 +242,11 @@ def insertar_luchador():
     cara_entrada.place(x=15, y=380)
 
     guardar = Button(ventana3, text="Guardar", width=30, height=2, bg="grey",
-                     command=lambda: insertar_luchador_tkinter([nombre_entrada.get(),
+                     command=lambda: insertar_luchador_tkinter(nombre_entrada.get(),
                                                                 apodo_entrada.get(),
                                                                 peso_entrada.get(),
                                                                 ratio_entrada.get(),
-                                                                cara_entrada.get()]))
+                                                                cara_entrada.get()))
     guardar.place(x=15, y=430)
 
     inserta.pack()
@@ -256,7 +256,188 @@ def insertar_luchador():
 
 
 def insertar_luchador_tkinter(nombre_entrada, apodo_entrada, peso_entrada, ratio_entrada, cara_entrada):
+    conexion = conectar_bbdd()
+    cursor = conexion.cursor()
+    ql_insertar_datos = "INSERT INTO luchadores (nombre,apodo,peso,ratio,cara) VALUES (%s, %s, %s, %s, %s)"
+    values = [(nombre_entrada, apodo_entrada, peso_entrada, ratio_entrada, cara_entrada)]
+
+    cursor.executemany(ql_insertar_datos, values)
+    conexion.commit()
+
+    print(("Se ha guardado el luchador"))
+
+
     return
+
+def buscar_luchador():
+    ventana3 = Tk()
+    ventana3.geometry("500x500")
+    ventana3.title("Buscar Luchador")
+    busca = Label(ventana3, text="Busca el Luchador", bg="grey", fg="black", width="500", height="3")
+
+    nombre_texto = Label(ventana3, text="Nombre")
+    apodo_texto = Label(ventana3, text="Apodo")
+    peso_texto = Label(ventana3, text="Peso")
+    ratio_texto = Label(ventana3, text="Ratio")
+    cara_texto = Label(ventana3, text="Cara")
+
+    nombre_texto.place(x=15, y=70)
+    apodo_texto.place(x=15, y=140)
+    peso_texto.place(x=15, y=210)
+    ratio_texto.place(x=15, y=280)
+    cara_texto.place(x=15, y=350)
+
+    nombre = StringVar()
+    apodo = StringVar()
+    peso = StringVar()
+    ratio = StringVar()
+    cara = StringVar()
+
+    nombre_entrada = Entry(ventana3, textvariable=nombre, width="30")
+    apodo_entrada = Entry(ventana3, textvariable=apodo, width="30")
+    peso_entrada = Entry(ventana3, textvariable=peso, width="30")
+    ratio_entrada = Entry(ventana3, textvariable=ratio, width="30")
+    cara_entrada = Entry(ventana3, textvariable=cara, width="30")
+
+    nombre_entrada.place(x=15, y=100)
+    apodo_entrada.place(x=15, y=170)
+    peso_entrada.place(x=15, y=240)
+    ratio_entrada.place(x=15, y=310)
+    cara_entrada.place(x=15, y=380)
+
+    buscar_nombre = Button(ventana3, text="Buscar", width=5, bg="grey",
+                     command=lambda: buscar_luchador_tkinter_nombre(nombre_entrada.get()))
+    buscar_nombre.place(x=220, y=100)
+
+    buscar_apodo = Button(ventana3, text="Buscar", width=5, bg="grey",
+                     command=lambda: buscar_luchador_tkinter_apodo(apodo_entrada.get()))
+    buscar_apodo.place(x=220, y=170)
+
+    buscar_peso = Button(ventana3, text="Buscar", width=5, bg="grey",
+                     command=lambda: buscar_luchador_tkinter_peso(peso_entrada.get()))
+    buscar_peso.place(x=220, y=240)
+
+    buscar_ratio = Button(ventana3, text="Buscar", width=5, bg="grey",
+                     command=lambda: buscar_luchador_tkinter_ratio(ratio_entrada.get()))
+    buscar_ratio.place(x=220, y=310)
+
+    buscar_cara = Button(ventana3, text="Buscar", width=5, bg="grey",
+                     command=lambda: buscar_luchador_tkinter_cara(cara_entrada.get()))
+    buscar_cara.place(x=220, y=380)
+
+    busca.pack()
+    ventana3.mainloop()
+
+
+    return
+
+def buscar_luchador_tkinter_nombre(nombre_entrada):
+    lista_datos = list()
+    conexion = conectar_bbdd()
+    cursor = conexion.cursor()
+    ql = "SELECT * from luchadores where nombre like '% %s %'"
+    values = nombre_entrada
+
+    cursor.execute(ql, values)
+    datos = cursor.fetchall()
+    conexion.commit()
+    for ids, nombres, apodos, pesos, ratios, caras in datos:
+        luchador = {"id": ids, "cara": caras, "nombre": nombres, "apodo": apodos, "peso": pesos, "ratio": ratios}
+        lista_datos.append(luchador)
+
+    print(("Se ha buscado el luchador"))
+
+    ventana2 = Tk()
+    menu_ventana = Menu(ventana2)
+    ventana2.title("Ventana para mostrar los datos")
+    ventana2.config(menu=menu_ventana)
+    ventana2.geometry("1400x200")
+    ventana2.resizable(True, True)
+
+    tv = ttk.Treeview(ventana2)
+
+    tv['columns'] = ("id", "nombre", "apodo", "peso", "ratio", "cara")
+
+    tv.column("#0", width=0, anchor=CENTER)
+    tv.column("id", width=50, anchor=CENTER)
+    tv.column("nombre", width=150, anchor=CENTER)
+    tv.column("apodo", width=150, anchor=CENTER)
+    tv.column("peso", width=150, anchor=CENTER)
+    tv.column("ratio", width=150, anchor=CENTER)
+    tv.column("cara", width=800, anchor=CENTER)
+
+    tv.heading("#0", text="", anchor=CENTER)
+    tv.heading("id", text="Id", anchor=CENTER)
+    tv.heading("nombre", text="Nombre", anchor=CENTER)
+    tv.heading("apodo", text="Apodo", anchor=CENTER)
+    tv.heading("peso", text="Peso", anchor=CENTER)
+    tv.heading("ratio", text="Ratio", anchor=CENTER)
+    tv.heading("cara", text="Cara", anchor=CENTER)
+
+    siguiente = 1
+
+    for luchadore in lista_datos:
+        tv.insert(parent="", index=siguiente, values=(luchadore["id"], luchadore["nombre"], luchadore["apodo"],
+                                                      luchadore["peso"], luchadore["ratio"], luchadore["cara"]))
+        siguiente += 1
+
+    barra1 = Scrollbar(ventana2, command=tv.yview)
+    barra1.pack(side=RIGHT, fill=Y)
+    tv.config(yscrollcommand=barra1.set)
+
+    tv.pack()
+    ventana2.mainloop()
+
+    return
+
+def buscar_luchador_tkinter_apodo(apodo_entrada):
+    conexion = conectar_bbdd()
+    cursor = conexion.cursor()
+    ql = "SELECT INTO luchadores (apodo) VALUES (%s)"
+    values = apodo_entrada
+
+    cursor.executemany(ql, values)
+    conexion.commit()
+
+    print(("Se ha buscado el luchador"))
+    return
+
+def buscar_luchador_tkinter_peso(peso_entrada):
+    conexion = conectar_bbdd()
+    cursor = conexion.cursor()
+    ql = "SELECT INTO luchadores (peso) VALUES (%s)"
+    values = peso_entrada
+
+    cursor.executemany(ql, values)
+    conexion.commit()
+
+    print(("Se ha buscado el luchador"))
+    return
+
+def buscar_luchador_tkinter_ratio(ratio_entrada):
+    conexion = conectar_bbdd()
+    cursor = conexion.cursor()
+    ql = "SELECT INTO luchadores (ratio) VALUES (%s)"
+    values = ratio_entrada
+
+    cursor.executemany(ql, values)
+    conexion.commit()
+
+    print(("Se ha buscado el luchador"))
+    return
+
+def buscar_luchador_tkinter_cara(cara_entrada):
+    conexion = conectar_bbdd()
+    cursor = conexion.cursor()
+    ql_insertar_datos = "SELECT INTO luchadores (cara) VALUES (%s)"
+    values = cara_entrada
+
+    cursor.executemany(ql_insertar_datos, values)
+    conexion.commit()
+
+    print(("Se ha buscado el luchador"))
+    return
+
 
 
 def aplicacion_luchadores():
@@ -271,6 +452,8 @@ def aplicacion_luchadores():
     barra_menu1 = Menu(menu_principal, tearoff=0)
     barra_menu2 = Menu(menu_principal, tearoff=0)
     barra_menu3 = Menu(menu_principal, tearoff=0)
+    barra_menu4 = Menu(menu_principal, tearoff=0)
+
 
     menu_principal.add_cascade(label="Cargar", menu=barra_menu)
     barra_menu.add_command(label="Luchadores", command=lambda: insertar_datos())
@@ -283,6 +466,9 @@ def aplicacion_luchadores():
 
     menu_principal.add_cascade(label="Introducir", menu=barra_menu3)
     barra_menu3.add_command(label="Luchadores", command=lambda: insertar_luchador())
+
+    menu_principal.add_cascade(label="Buscar", menu=barra_menu4)
+    barra_menu4.add_command(label="Luchador", command=lambda: buscar_luchador())
 
     root.mainloop()
 
